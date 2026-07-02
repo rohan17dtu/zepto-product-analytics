@@ -234,7 +234,7 @@ SELECT
 ROUND(SUM(NetAmount),2) AS Total_Revenue
 FROM sales_data
 WHERE OrderStatus='Delivered';
-SELECT
+
 #### Output
 ![Total Revenue](visuals/totalrevenue.png)
 
