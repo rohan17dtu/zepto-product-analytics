@@ -423,11 +423,93 @@ FROM daily_revenue;
 
 Calculated:
 
-- Revenue by Category
-- Revenue by Brand
-- Top Selling Products
-- Quantity Sold by Product
-- Average Selling Price
+### 1.Revenue by category
+#### SQL Query
+```sql
+SELECT
+p.Category,
+ROUND(SUM(s.NetAmount),2) AS Revenue,
+COUNT(*) AS Orders
+FROM sales_data s
+JOIN products_information p
+ON s.ProductID=p.ProductID
+WHERE s.OrderStatus='Delivered'
+GROUP BY p.Category
+ORDER BY Revenue DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/revenuebycat.csv)
+
+---
+### 2.Revenue by brand
+#### SQL Query
+```sql
+SELECT
+p.Brand,
+ROUND(SUM(s.NetAmount),2) AS Revenue,
+COUNT(*) AS Orders
+FROM sales_data s
+JOIN products_information p
+ON s.ProductID=p.ProductID
+WHERE s.OrderStatus='Delivered'
+GROUP BY p.Brand
+ORDER BY Revenue DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/revenuebybrand.csv)
+
+---
+### 3.Top Selling Product
+#### SQL Query
+```sql
+SELECT
+p.ProductName,
+ROUND(SUM(s.NetAmount),2) AS Revenue,
+COUNT(*) AS Orders
+FROM sales_data s
+JOIN products_information p
+ON s.ProductID=p.ProductID
+WHERE s.OrderStatus='Delivered'
+GROUP BY p.ProductName
+ORDER BY Orders DESC
+LIMIT 10;
+```
+#### output
+📄 [View Full SQL Output](visuals/topselling.csv)
+
+---
+### 4.Quantity sold by Product
+#### SQL Query
+```sql
+SELECT
+    p.ProductName,
+    SUM(s.Quantity) AS Total_Quantity_Sold
+FROM sales_data s
+JOIN products_information p
+ON s.ProductID = p.ProductID
+WHERE s.OrderStatus = 'Delivered'
+GROUP BY p.ProductName
+ORDER BY Total_Quantity_Sold DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/quantitybyproduct.csv)
+
+---
+### 5.Average Selling Price
+#### SQL Query
+```sql
+SELECT
+    p.ProductName,
+    ROUND(SUM(s.NetAmount) / SUM(s.Quantity), 2) AS Average_Selling_Price
+FROM sales_data s
+JOIN products_information p
+ON s.ProductID = p.ProductID
+WHERE s.OrderStatus = 'Delivered'
+GROUP BY p.ProductName
+ORDER BY Average_Selling_Price DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/avgsellingprice.csv)
 
 ---
 
