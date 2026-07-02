@@ -517,11 +517,100 @@ ORDER BY Average_Selling_Price DESC;
 
 Calculated:
 
-- Revenue by City
-- Revenue by Customer Segment
-- Orders per Customer
-- Repeat Customer Behaviour
-- Customer ranking by revenue
+### 1.Revenue by city
+#### SQL Query
+```sql
+SELECT
+st.City,
+COUNT(*) AS Orders,
+ROUND(SUM(s.NetAmount),2) AS Revenue,
+ROUND(AVG(s.DeliveryMinutes),2) AS Avg_Delivery
+FROM sales_data s
+JOIN stores_information st
+ON s.StoreID=st.StoreID
+GROUP BY st.City
+ORDER BY Revenue DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/revenuebycity.csv)
+
+---
+### 2.Revenue by customer segment
+#### SQL Query
+```sql
+SELECT
+c.CustomerSegment,
+ROUND(SUM(s.NetAmount),2) Revenue,
+COUNT(*) Orders
+FROM sales_data s
+JOIN customers_information c
+ON s.CustomerID=c.CustomerID
+WHERE s.OrderStatus='Delivered'
+GROUP BY c.CustomerSegment
+ORDER BY Revenue DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/revenuebycusseg.csv)
+
+---
+### 3.Orders per Customer
+#### SQL Query
+```sql
+SELECT
+    c.CustomerName,
+    COUNT(s.OrderID) AS Total_Orders
+FROM sales_data s
+JOIN customers_information c
+ON s.CustomerID = c.CustomerID
+GROUP BY c.CustomerID, c.CustomerName
+ORDER BY Total_Orders DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/orderspercustomer.csv)
+
+---
+### 4.Repeat Customer Behaviour
+#### SQL Query
+```sql
+SELECT
+ROUND(
+100.0 *
+COUNT(DISTINCT CASE WHEN orders > 1 THEN CustomerID END) /
+COUNT(DISTINCT CustomerID),2
+) AS Repeat_Purchase_Rate
+FROM (
+    SELECT CustomerID, COUNT(*) AS orders
+    FROM sales_data
+    GROUP BY CustomerID
+) t;merName
+ORDER BY Total_Orders DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/repeatcustomer.csv)
+
+---
+### 5.Customer Ranking By Revenue
+#### SQL Query
+```sql
+SELECT
+    c.CustomerName,
+    SUM(s.NetAmount) AS Total_Revenue,
+
+    RANK() OVER(
+        ORDER BY SUM(s.NetAmount) DESC
+    ) AS Revenue_Rank
+
+FROM sales_data s
+
+JOIN customers_information c
+ON s.CustomerID = c.CustomerID
+
+GROUP BY c.CustomerID,c.CustomerName;
+
+```
+#### output
+📄 [View Full SQL Output](visuals/customerrank.csv)
+
 
 ---
 
@@ -529,10 +618,75 @@ Calculated:
 
 Calculated:
 
-- Promotion-wise Revenue
-- Promotion Usage
-- Promotion Discount
-- Promotion Performance
+### 1.Promotion wise Revenue
+#### SQL Query
+```sql
+SELECT
+    p.PromotionType,
+    ROUND(SUM(s.NetAmount), 2) AS Revenue
+FROM sales_data s
+JOIN promotions_information p
+ON s.PromotionID = p.PromotionID
+WHERE s.OrderStatus = 'Delivered'
+GROUP BY p.PromotionType
+ORDER BY Revenue DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/promwiserev.csv)
+
+
+---
+### 2.Promotion Usage
+#### SQL Query
+```sql
+SELECT
+    p.PromotionType,
+    COUNT(s.OrderID) AS Orders_Using_Promotion
+FROM sales_data s
+JOIN promotions_information p
+ON s.PromotionID = p.PromotionID
+GROUP BY p.PromotionType
+ORDER BY Orders_Using_Promotion DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/promotionusage.csv)
+
+
+---
+### 3.Promotion Discount
+#### SQL Query
+```sql
+SELECT
+    p.PromotionType,
+    ROUND(SUM(s.DiscountAmount), 2) AS Total_Discount
+FROM sales_data s
+JOIN promotions_information p
+ON s.PromotionID = p.PromotionID
+GROUP BY p.PromotionType
+ORDER BY Total_Discount DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/promotiondiscount.csv)
+
+
+---
+### 4.Promotion Performance
+#### SQL Query
+```sql
+SELECT
+pr.PromotionType,
+ROUND(AVG(s.DiscountAmount),2) AS Avg_Discount,
+ROUND(AVG(s.NetAmount),2) AS Avg_Order_Value,
+COUNT(*) AS Orders
+FROM sales_data s
+JOIN promotions_information pr
+ON s.PromotionID=pr.PromotionID
+GROUP BY pr.PromotionType
+ORDER BY Avg_Discount DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/promotionperformance.csv)
+
 
 ---
 
@@ -540,9 +694,61 @@ Calculated:
 
 Calculated:
 
-- Orders by Payment Method
-- Revenue by Payment Method
-- Payment Method Share
+### 1.Orders by Payment Method
+#### SQL Query
+```sql
+SELECT
+p.PaymentMethod,
+COUNT(*) AS Orders,
+ROUND(COUNT(*)*100.0/
+(SELECT COUNT(*) FROM sales_data),2) AS Percentage
+FROM sales_data s
+JOIN payments_information p
+ON s.PaymentID=p.PaymentID
+GROUP BY p.PaymentMethod
+ORDER BY Orders DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/orderbypaymentmethod.csv)
+
+
+---
+### 2.Revenue by Payment Method
+#### SQL Query
+```sql
+
+SELECT
+    p.PaymentMethod,
+    ROUND(SUM(s.NetAmount), 2) AS Revenue
+FROM sales_data s
+JOIN payments_information p
+ON s.PaymentID = p.PaymentID
+WHERE s.OrderStatus = 'Delivered'
+GROUP BY p.PaymentMethod
+ORDER BY Revenue DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/revbymethod.csv)
+
+
+---
+### 3.Payment Method Share
+#### SQL Query
+```sql
+SELECT
+p.PaymentMethod,
+COUNT(*) AS Orders,
+ROUND(COUNT(*)*100.0/
+(SELECT COUNT(*) FROM sales_data),2) AS Percentage
+FROM sales_data s
+JOIN payments_information p
+ON s.PaymentID=p.PaymentID
+GROUP BY p.PaymentMethod
+ORDER BY Orders DESC;
+```
+#### output
+📄 [View Full SQL Output](visuals/orderbypaymentmethod.csv)
+
 
 ---
 
@@ -550,12 +756,58 @@ Calculated:
 
 Calculated:
 
-- Average Delivery Time
-- Delivery Time Distribution
-- Delivery Performance
+### 1.Average Delivery Time
+#### SQL Query
+```sql
+SELECT
+ROUND(AVG(DeliveryMinutes),2) AS Avg_Delivery_Time
+FROM sales_data
+WHERE OrderStatus='Delivered';
+```
+#### output
+📄 [View Full SQL Output](visuals/visuals/deltimedist.csv)
 
 ---
+### 2.Delivery Time Distribution
+#### SQL Query
+```sql
+SELECT
+CASE
+WHEN DeliveryMinutes <= 10 THEN '0-10 min'
+WHEN DeliveryMinutes <= 20 THEN '11-20 min'
+WHEN DeliveryMinutes <= 30 THEN '21-30 min'
+ELSE '30+ min'
+END AS Delivery_Bucket,
+COUNT(*) AS Orders
+FROM sales_data
+WHERE OrderStatus='Delivered'
+GROUP BY Delivery_Bucket
+ORDER BY Delivery_Bucket;
 
+```
+#### output
+📄 [View Full SQL Output](visuals/deltimedist.csv)
+
+
+---
+### 3.Delivery Perfomance
+#### SQL Query
+```sql
+SELECT
+st.City,
+ROUND(AVG(s.DeliveryMinutes),2) AS Avg_Delivery_Time,
+COUNT(*) AS Orders
+FROM sales_data s
+JOIN stores_information st
+ON s.StoreID=st.StoreID
+WHERE s.OrderStatus='Delivered'
+GROUP BY st.City
+ORDER BY Avg_Delivery_Time;
+```
+#### output
+📄 [View Full SQL Output](visuals/adt.csv)
+
+---
 # 📈 Tableau Dashboard
 
 Built an executive dashboard containing:
