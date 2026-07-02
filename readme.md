@@ -225,7 +225,7 @@ Measures revenue generated under promotional campaigns.
 SQL was used to answer business questions through aggregation, joins and window functions.
 
 ## KPI Analysis
-## 📊 Executive KPI Summary
+### 📊 Executive KPI Summary
 
 | KPI |  Result |
 |------|--------:|
@@ -293,7 +293,21 @@ ROUND(
 
 Calculated:
 
-- Revenue by Month
+### 1.Revenue by month
+#### SQL Query
+```sql
+SELECT
+    DATE_FORMAT(OrderDateTime, '%Y-%m') AS Month,
+    ROUND(SUM(NetAmount), 2) AS Revenue
+FROM sales_data
+WHERE OrderStatus = 'Delivered'
+GROUP BY DATE_FORMAT(OrderDateTime, '%Y-%m')
+ORDER BY Month;
+```
+#### output
+![](visuals/revenuebymonth.sql.html)
+
+---
 - Revenue by Quarter
 - Revenue by Year
 - Monthly Revenue Trend
