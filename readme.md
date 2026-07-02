@@ -54,6 +54,15 @@ A Product Analyst at Zepto wants to monitor overall business health by tracking:
 The final deliverable is an interactive Tableau dashboard supported by SQL insights and Python analysis.
 
 ---
+## 📂 Dataset
+
+This project uses a publicly available retail grocery dataset sourced from **Kaggle** and models a Zepto-like quick commerce business for analytical purposes.
+
+The dataset was used to simulate real-world product analytics workflows, including SQL-based business analysis, exploratory data analysis, KPI development, and dashboard creation.
+
+> **Note:** The dataset is intended for educational and portfolio purposes. Business metrics, customer behavior, and operational insights presented in this project are based on the sample dataset and may not accurately reflect Zepto's actual business performance or internal data.
+
+---
 # Skills Demonstrated
 
 - Data Cleaning
