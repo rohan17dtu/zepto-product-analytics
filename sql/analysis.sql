@@ -273,3 +273,70 @@ JOIN stores_information st
 ON s.StoreID=st.StoreID
 GROUP BY st.City
 ORDER BY Revenue DESC;
+
+WITH monthly_revenue AS (
+    SELECT
+        DATE_FORMAT(OrderDateTime,'%Y-%m') AS Month,
+        SUM(NetAmount) AS Revenue
+    FROM sales_data
+    GROUP BY DATE_FORMAT(OrderDateTime,'%Y-%m')
+)
+
+SELECT
+    Month,
+    Revenue,
+    LAG(Revenue) OVER(ORDER BY Month) AS Previous_Month_Revenue,
+
+    ROUND(
+        (
+            Revenue - LAG(Revenue) OVER(ORDER BY Month)
+        )
+        /
+        LAG(Revenue) OVER(ORDER BY Month)
+        *100,
+        2
+    ) AS MoM_Growth_Percentage
+
+FROM monthly_revenue;
+
+SELECT
+    c.CustomerName,
+    SUM(s.NetAmount) AS Total_Revenue,
+
+    RANK() OVER(
+        ORDER BY SUM(s.NetAmount) DESC
+    ) AS Revenue_Rank
+
+FROM sales_data s
+
+JOIN customers_information c
+ON s.CustomerID = c.CustomerID
+
+GROUP BY c.CustomerID,c.CustomerName;
+
+WITH daily_revenue AS (
+
+SELECT
+
+DATE(OrderDateTime) AS OrderDate,
+
+SUM(NetAmount) AS Revenue
+
+FROM sales_data
+
+GROUP BY DATE(OrderDateTime)
+
+)
+
+SELECT
+
+OrderDate,
+
+Revenue,
+
+SUM(Revenue)
+OVER(
+ORDER BY OrderDate
+) AS Running_Revenue
+
+FROM daily_revenue;
