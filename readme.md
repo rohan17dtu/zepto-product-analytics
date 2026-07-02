@@ -835,14 +835,62 @@ Dashboard Screenshot
 
 # 💡 Key Business Insights
 
-- Generated over **₹1.3 Billion** in revenue.
-- Average Order Value is approximately **₹2,014**.
-- Cancellation rate remained close to **5%**.
-- UPI dominated payment preferences.
-- Revenue remained relatively stable across months.
-- Certain brands consistently generated higher revenue.
-- Product categories contributed almost evenly with slight differences.
-- Delivery time averaged around **21 minutes**.
+
+## 📈 Revenue & Growth
+
+- Generated **₹1.30 Billion** in revenue across **650,000+ orders**, with an **Average Order Value (AOV) of ₹2,014**, indicating healthy basket sizes for a quick-commerce platform.
+- Month-over-Month (MoM) revenue remained relatively stable, fluctuating within **±12%** over **27 months (Jan 2023 – Apr 2025)**, suggesting a mature but largely flat growth trajectory.
+- Revenue consistently dipped during **February** (−11.66% in 2023 and −9.30% in 2025), likely due to the shorter calendar month rather than reduced customer demand.
+- Monthly revenue never exceeded **₹48.3 Million**, indicating potential saturation under the current acquisition and retention strategy.
+
+---
+
+## 🌍 City Performance
+
+- **Chennai** emerged as the highest revenue-generating city with **₹203 Million** across **101K orders**, outperforming both **Delhi (₹182M)** and **Mumbai (₹173M)**.
+- **Kolkata, Noida, and Hyderabad** each generated approximately **₹102 Million**, suggesting potential opportunities for geographic expansion through additional dark stores and improved logistics.
+- Average delivery time remained remarkably consistent across all cities (**20.93–21.05 minutes**), indicating either highly standardized operations or limited variability in the sample dataset.
+
+---
+
+## 🛍️ Category Performance
+
+- Revenue distribution was highly balanced across all **8 product categories**, with **Beverages (₹160.5M)** leading and **Dairy (₹136.7M)** contributing the least—a difference of only about **15%**.
+- Such uniform category performance is uncommon in grocery retail, where staples usually dominate, suggesting either a well-balanced product catalog or characteristics of the sample dataset.
+- **Frozen Foods** generated relatively high revenue despite fewer orders, indicating a higher average order value and potential premium product opportunity.
+
+---
+
+## 👥 Customer Segments
+
+- Customer segment analysis indicates a possible **data quality limitation**.
+- **Regular customers** generated significantly higher revenue than **Premium customers**, which contradicts typical customer value patterns.
+- This suggests that the segment labels may not follow standard RFM segmentation, so product decisions based solely on this segmentation should be interpreted with caution.
+
+---
+
+## 🎯 Promotion Performance
+
+- All four promotion types (**Flat Discount, Percentage Discount, BOGO, and Free Delivery**) delivered nearly identical average discounts (**₹287–289**) and Average Order Values (**₹2,006–2,019**).
+- **Free Delivery** generated the highest order volume (**182,994 orders**) but the lowest AOV, indicating strong customer acquisition but limited basket expansion.
+- **Flat Discounts** achieved a similar order volume while maintaining the highest AOV, making them the most efficient promotion type in this dataset.
+- The minimal performance difference across promotion types suggests opportunities for **A/B testing discount strategies** rather than applying similar incentives across all campaigns.
+
+---
+
+## 🚚 Delivery Performance
+
+- Approximately **48.9%** of delivered orders were completed within **11–30 minutes**, aligning with Zepto's quick-commerce promise.
+- Only **10.9%** of orders were delivered within **10 minutes**, while **14.5%** required more than **30 minutes**, representing a potential source of customer dissatisfaction.
+- Delivery times showed minimal variation across cities, which may indicate highly standardized operations or a limitation of the underlying dataset.
+
+---
+
+## 💳 Payment Behaviour
+
+- **UPI** dominated customer transactions, accounting for approximately **65%** of all orders, reflecting India's digital payment ecosystem.
+- **Cash on Delivery** still represented around **5%** of orders, highlighting the importance of maintaining a reliable COD experience.
+- **Credit Cards** and **Wallets** together contributed approximately **22%** of all transactions, representing a customer segment that may respond well to cashback and loyalty initiatives.
 
 
 ---
@@ -891,18 +939,26 @@ using Tableau Public Desktop.
 
 ---
 
-# 🚀 Future Improvements
+# 🚀 Product Recommendations
 
-Possible enhancements include:
+The insights generated from this analytics project served as the foundation for a separate Product Management case study, where business problems were translated into product opportunities and feature recommendations.
 
-- Power BI Dashboard
-- Customer Cohort Analysis
-- RFM Segmentation
-- Customer Lifetime Value (CLV)
-- Market Basket Analysis
-- Forecasting Revenue using Time Series
-- Interactive SQL Dashboard
-- Automated ETL Pipeline
+Using the findings from this analysis, the following Product Management frameworks were applied:
+
+- 📌 Product Opportunity Mapping (POM)
+- 📈 AARRR Funnel Analysis
+- ⭐ North Star Metric (NSM)
+- 🎯 RICE Prioritization Framework
+- 📄 Product Roadmap
+- 📝 Product Requirements Document (PRD)
+
+The objective was to move beyond descriptive analytics and demonstrate how data-driven insights can be converted into product decisions, prioritization, and execution planning.
+
+This repository focuses on generating business insights from data. The companion Product Management repository demonstrates how these insights were transformed into actionable product initiatives, prioritized using industry-standard frameworks
+
+➡️ **Continue to the Product Management Repository:**
+
+🔗 [Product Recommendation](https://github.com/rohan17dtu/zepto-ai-product-strategy)
 
 ---
 
