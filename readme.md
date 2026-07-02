@@ -62,6 +62,17 @@ The dataset was used to simulate real-world product analytics workflows, includi
 
 > **Note:** The dataset is intended for educational and portfolio purposes. Business metrics, customer behavior, and operational insights presented in this project are based on the sample dataset and may not accurately reflect Zepto's actual business performance or internal data.
 
+The project uses multiple relational datasets:
+
+- Customers Information
+- Products Information
+- Sales Data
+- Stores Information
+- Promotions Information
+- Payments Information
+
+After cleaning and merging, a **Master Dataset** containing over **650,000 records** was created for analysis.
+
 ---
 # Skills Demonstrated
 
@@ -78,19 +89,6 @@ The dataset was used to simulate real-world product analytics workflows, includi
 - Data Visualization
 - Product Analytics
 - Storytelling with Data
-
-# 📂 Dataset
-
-The project uses multiple relational datasets:
-
-- Customers Information
-- Products Information
-- Sales Data
-- Stores Information
-- Promotions Information
-- Payments Information
-
-After cleaning and merging, a **Master Dataset** containing over **650,000 records** was created for analysis.
 
 ---
 
