@@ -228,11 +228,51 @@ SQL was used to answer business questions through aggregation, joins and window 
 
 Calculated:
 
-- Total Revenue
-- Total Orders
-- Average Order Value (AOV)
-- Average Delivery Time
-- Cancellation Rate
+# Total Revenue
+## SQL Query
+SELECT
+ROUND(SUM(NetAmount),2) AS Total_Revenue
+FROM sales_data
+WHERE OrderStatus='Delivered';
+SELECT
+## Output
+![Total Revenue](../visuals/totalrevenue.png)
+
+# Total orders
+## SQL Query
+SELECT
+COUNT(*) AS TotalOrders,
+COUNT(DISTINCT OrderID) AS UniqueOrders
+FROM sales_data;
+## Output
+![Total Orders](../visuals/totalorders.png)
+
+# Average Order Value
+## SQL Query
+SELECT
+ROUND(AVG(NetAmount),2) AS AOV
+FROM sales_data
+WHERE OrderStatus='Delivered';
+## Output
+![AOV](../visuals/aov.png)
+
+# Average Delivery Time
+## SQL Query
+SELECT
+ROUND(AVG(DeliveryMinutes),2) Avg_Delivery_Time
+FROM sales_data
+WHERE OrderStatus='Delivered';
+## Output
+![ADT](../visuals/adt.png)
+
+# Cancellation rate
+## SQL Query
+SELECT
+ROUND(
+100 * SUM(OrderStatus='Cancelled') / COUNT(*),2
+) AS Cancellation_Rate from sales_data;
+## Output
+![CANCELLATION RATE](../visuals/cancellationrate.png)
 
 ---
 
