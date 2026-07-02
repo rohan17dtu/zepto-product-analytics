@@ -305,7 +305,7 @@ GROUP BY DATE_FORMAT(OrderDateTime, '%Y-%m')
 ORDER BY Month;
 ```
 #### output
-📄 [View Full SQL Output](visuals/revenuebymonth.sql.html)
+📄 [View Full SQL Output](visuals/revenuebymonth.csv)
 
 ---
 - Revenue by Quarter
