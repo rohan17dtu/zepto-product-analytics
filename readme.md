@@ -244,6 +244,8 @@ Calculated:
 - Revenue by Quarter
 - Revenue by Year
 - Monthly Revenue Trend
+- Month-over-month revenue growth
+- Running cumulative revenue
 
 ---
 
@@ -267,6 +269,7 @@ Calculated:
 - Revenue by Customer Segment
 - Orders per Customer
 - Repeat Customer Behaviour
+- Customer ranking by revenue
 
 ---
 
