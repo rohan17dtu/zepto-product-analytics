@@ -225,10 +225,21 @@ Measures revenue generated under promotional campaigns.
 SQL was used to answer business questions through aggregation, joins and window functions.
 
 ## KPI Analysis
+## 📊 Executive KPI Summary
+
+| KPI |  Result |
+|------|--------:|
+| **Total Revenue** | **₹1,308,844,068** |
+| **Total Orders** |  **650,000** |
+| **Average Order Value (AOV)** |  **₹2,014** |
+| **Average Delivery Time** |  **21.01 min** |
+| **Cancellation Rate**  | **5.02%** |
+
+---
 
 Calculated:
 
-### Total Revenue
+### 1.Total Revenue
 #### SQL Query
 ```sql
 SELECT
@@ -238,7 +249,7 @@ WHERE OrderStatus='Delivered';
 ```
 ---
 
-### Total orders
+### 2.Total orders
 #### SQL Query
 ```sql
 SELECT
@@ -248,7 +259,7 @@ FROM sales_data;
 ```
 ---
 
-### Average Order Value
+### 3.Average Order Value
 #### SQL Query
 ```sql
 SELECT
@@ -257,7 +268,7 @@ FROM sales_data
 WHERE OrderStatus='Delivered';
 ```
 
-### Average Delivery Time
+### 4.Average Delivery Time
 #### SQL Query
 ```sql
 SELECT
@@ -267,7 +278,7 @@ WHERE OrderStatus='Delivered';
 ```
 ---
 
-### Cancellation rate
+### 5.Cancellation rate
 #### SQL Query
 ```sql
 SELECT
