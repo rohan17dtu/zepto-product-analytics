@@ -1,6 +1,6 @@
 # 🛒 Zepto Product Analytics Dashboard
 
-A complete end-to-end Product Analytics project built using **Python (Pandas & Matplotlib), SQL, and Tableau** to analyze customer orders, revenue, delivery performance, promotions, and payment behavior for a simulated Zepto grocery dataset.
+A complete end-to-end Product Analytics project built using **Python (Pandas & Matplotlib), SQL, and Tableau** to analyze customer orders, revenue, delivery performance, promotions, and payment behavior for a simulated Zepto grocery dataset from Kaggle (real world data may vary, the entire project is for education purpose to study real-world analytics pipeline).
 
 The project demonstrates the complete analytics workflow followed by Product Analysts and Business Analysts—from data cleaning and KPI generation to SQL business analysis and interactive Tableau dashboard creation.
 
