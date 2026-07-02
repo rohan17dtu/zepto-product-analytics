@@ -236,7 +236,7 @@ FROM sales_data
 WHERE OrderStatus='Delivered';
 SELECT
 ## Output
-![Total Revenue](../visuals/totalrevenue.png)
+![Total Revenue](visuals/totalrevenue.png)
 
 # Total orders
 ## SQL Query
@@ -245,7 +245,7 @@ COUNT(*) AS TotalOrders,
 COUNT(DISTINCT OrderID) AS UniqueOrders
 FROM sales_data;
 ## Output
-![Total Orders](../visuals/totalorders.png)
+![Total Orders](visuals/totalorders.png)
 
 # Average Order Value
 ## SQL Query
@@ -254,7 +254,7 @@ ROUND(AVG(NetAmount),2) AS AOV
 FROM sales_data
 WHERE OrderStatus='Delivered';
 ## Output
-![AOV](../visuals/aov.png)
+![AOV](visuals/aov.png)
 
 # Average Delivery Time
 ## SQL Query
@@ -263,7 +263,7 @@ ROUND(AVG(DeliveryMinutes),2) Avg_Delivery_Time
 FROM sales_data
 WHERE OrderStatus='Delivered';
 ## Output
-![ADT](../visuals/adt.png)
+![ADT](visuals/adt.png)
 
 # Cancellation rate
 ## SQL Query
@@ -272,7 +272,7 @@ ROUND(
 100 * SUM(OrderStatus='Cancelled') / COUNT(*),2
 ) AS Cancellation_Rate from sales_data;
 ## Output
-![CANCELLATION RATE](../visuals/cancellationrate.png)
+![CANCELLATION RATE](visuals/cancellationrate.png)
 
 ---
 
