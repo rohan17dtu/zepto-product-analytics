@@ -308,11 +308,114 @@ ORDER BY Month;
 📄 [View Full SQL Output](visuals/revenuebymonth.csv)
 
 ---
-- Revenue by Quarter
-- Revenue by Year
-- Monthly Revenue Trend
-- Month-over-month revenue growth
-- Running cumulative revenue
+### 2.Revenue by Quarter
+#### SQL Query
+```sql
+WITH quarterly_revenue AS (
+SELECT
+    YEAR(OrderDateTime) AS Year,
+    QUARTER(OrderDateTime) AS Quarter,
+    SUM(NetAmount) AS Revenue
+FROM sales_data
+WHERE OrderStatus='Delivered'
+GROUP BY
+    YEAR(OrderDateTime),
+    QUARTER(OrderDateTime)
+    )
+SELECT
+    CONCAT(Year,'-Q',Quarter) AS Quarter,
+    ROUND(Revenue,2) AS Revenue
+FROM quarterly_revenue
+ORDER BY Year, Quarter;
+
+```
+#### output
+📄 [View Full SQL Output](visuals/revenuebyquarter.csv)
+
+---
+### 3.Revenue by year
+#### SQL Query
+```sql
+SELECT
+    YEAR(OrderDateTime) AS Year,
+    ROUND(SUM(NetAmount), 2) AS Revenue
+FROM sales_data
+WHERE OrderStatus = 'Delivered'
+GROUP BY YEAR(OrderDateTime)
+ORDER BY Year;
+```
+#### output
+📄 [View Full SQL Output](visuals/revenuebyyear.csv)
+
+---
+### 4.Monthly revenue trend
+#### SQL Query
+```sql
+SELECT
+    DATE_FORMAT(OrderDateTime, '%Y-%m') AS Month,
+    ROUND(SUM(NetAmount), 2) AS Revenue
+FROM sales_data
+WHERE OrderStatus = 'Delivered'
+GROUP BY DATE_FORMAT(OrderDateTime, '%Y-%m')
+ORDER BY DATE_FORMAT(OrderDateTime, '%Y-%m');
+
+```
+#### output
+📄 [View Full SQL Output](visuals/monthlytrend.csv)
+
+---
+### 4.Month-over-Month Revenue Growth
+#### SQL Query
+```sql
+WITH monthly_revenue AS (
+    SELECT
+        DATE_FORMAT(OrderDateTime,'%Y-%m') AS Month,
+        SUM(NetAmount) AS Revenue
+    FROM sales_data
+    GROUP BY DATE_FORMAT(OrderDateTime,'%Y-%m')
+)
+
+SELECT
+    Month,
+    Revenue,
+    LAG(Revenue) OVER(ORDER BY Month) AS Previous_Month_Revenue,
+
+    ROUND(
+        (
+            Revenue - LAG(Revenue) OVER(ORDER BY Month)
+        )
+        /
+        LAG(Revenue) OVER(ORDER BY Month)
+        *100,
+        2
+    ) AS MoM_Growth_Percentage
+FROM monthly_revenue;
+```
+#### output
+📄 [View Full SQL Output](visuals/momrevenue.csv)
+
+------
+### 5.Running Cummulative Revenue 
+#### SQL Query
+```sql
+WITH daily_revenue AS (
+SELECT
+DATE(OrderDateTime) AS OrderDate,
+SUM(NetAmount) AS Revenue
+FROM sales_data
+GROUP BY DATE(OrderDateTime)
+)
+SELECT
+OrderDate,
+Revenue,
+SUM(Revenue)
+OVER(
+ORDER BY OrderDate
+) AS Running_Revenue
+FROM daily_revenue;
+```
+#### output
+📄 [View Full SQL Output](visuals/runningcumrevenue.csv)
 
 ---
 
