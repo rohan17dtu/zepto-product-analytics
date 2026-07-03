@@ -1,33 +1,72 @@
 CREATE DATABASE zepto_analysis;
 USE zepto_analysis;
 SHOW TABLES;
-SELECT
 
+SELECT
 SUM(OrderID IS NULL) AS OrderID,
-
 SUM(OrderDateTime IS NULL) AS OrderDateTime,
-
 SUM(CustomerID IS NULL) AS CustomerID,
-
 SUM(ProductID IS NULL) AS ProductID,
-
 SUM(StoreID IS NULL) AS StoreID,
+SUM(NetAmount IS NULL) AS NetAmount FROM sales_data;
 
-SUM(NetAmount IS NULL) AS NetAmount
+## Total Revenue
+SELECT SUM(NetAmount) AS Total_Revenue FROM sales_data;
 
-FROM sales_data;
-SELECT
+## Total Orders
+SELECT COUNT(*) AS TotalOrders, COUNT(DISTINCT OrderID) AS UniqueOrders FROM sales_data;
 
-COUNT(*) AS TotalOrders,
-
-COUNT(DISTINCT OrderID) AS UniqueOrders
-
-FROM sales_data;
-
+## orders status
 SELECT OrderStatus,
 COUNT(*) AS Orders
 FROM sales_data
 GROUP BY OrderStatus;
+
+##revenue-bymonth
+    SELECT
+    DATE_FORMAT(OrderDateTime, '%Y-%m') AS Month,
+    ROUND(SUM(NetAmount), 2) AS Revenue
+FROM sales_data
+WHERE OrderStatus = 'Delivered'
+GROUP BY DATE_FORMAT(OrderDateTime, '%Y-%m')
+ORDER BY Month;
+
+##revenue byquater
+  WITH quarterly_revenue AS (
+SELECT
+    YEAR(OrderDateTime) AS Year,
+    QUARTER(OrderDateTime) AS Quarter,
+    SUM(NetAmount) AS Revenue
+FROM sales_data
+WHERE OrderStatus='Delivered'
+GROUP BY
+    YEAR(OrderDateTime),
+    QUARTER(OrderDateTime)
+    )
+SELECT
+    CONCAT(Year,'-Q',Quarter) AS Quarter,
+    ROUND(Revenue,2) AS Revenue
+FROM quarterly_revenue
+ORDER BY Year, Quarter;
+
+##revenue byyear
+    SELECT
+    YEAR(OrderDateTime) AS Year,
+    ROUND(SUM(NetAmount), 2) AS Revenue
+FROM sales_data
+WHERE OrderStatus = 'Delivered'
+GROUP BY YEAR(OrderDateTime)
+ORDER BY Year;
+
+##monthlytrend
+    SELECT
+    DATE_FORMAT(OrderDateTime, '%Y-%m') AS Month,
+    ROUND(SUM(NetAmount), 2) AS Revenue
+FROM sales_data
+WHERE OrderStatus = 'Delivered'
+GROUP BY DATE_FORMAT(OrderDateTime, '%Y-%m')
+ORDER BY DATE_FORMAT(OrderDateTime, '%Y-%m');
+
 
 SELECT PaymentMethod,
 COUNT(*)
@@ -48,35 +87,27 @@ FROM sales_data
 WHERE OrderStatus='Delivered';
 SELECT
 
+
 COUNT(*) AS Total_Orders
-
 FROM sales_data
-
 WHERE OrderStatus='Delivered';
 
+## average orders value
 SELECT
 ROUND(AVG(NetAmount),2) AS AOV
 FROM sales_data
 WHERE OrderStatus='Delivered';
 
+##revenuebycat
 SELECT
-
 p.Category,
-
 ROUND(SUM(s.NetAmount),2) AS Revenue,
-
 COUNT(*) AS Orders
-
 FROM sales_data s
-
 JOIN products_information p
-
 ON s.ProductID=p.ProductID
-
 WHERE s.OrderStatus='Delivered'
-
 GROUP BY p.Category
-
 ORDER BY Revenue DESC;
 
 SELECT
@@ -90,6 +121,7 @@ WHERE s.OrderStatus='Delivered'
 GROUP BY st.City
 ORDER BY Revenue DESC;
 
+##TOP SELLING
 SELECT
 p.ProductName,
 ROUND(SUM(s.NetAmount),2) AS Revenue,
@@ -99,9 +131,21 @@ JOIN products_information p
 ON s.ProductID=p.ProductID
 WHERE s.OrderStatus='Delivered'
 GROUP BY p.ProductName
-ORDER BY Revenue DESC
+ORDER BY Orders DESC
 LIMIT 10;
 
+##quantityby product
+SELECT
+    p.ProductName,
+    SUM(s.Quantity) AS Total_Quantity_Sold
+FROM sales_data s
+JOIN products_information p
+ON s.ProductID = p.ProductID
+WHERE s.OrderStatus = 'Delivered'
+GROUP BY p.ProductName
+ORDER BY Total_Quantity_Sold DESC;
+
+##revenuebybrand
 SELECT
 p.Brand,
 ROUND(SUM(s.NetAmount),2) AS Revenue,
@@ -113,11 +157,32 @@ WHERE s.OrderStatus='Delivered'
 GROUP BY p.Brand
 ORDER BY Revenue DESC;
 
+##avg selling price
+SELECT
+    p.ProductName,
+    ROUND(SUM(s.NetAmount) / SUM(s.Quantity), 2) AS Average_Selling_Price
+FROM sales_data s
+JOIN products_information p
+ON s.ProductID = p.ProductID
+WHERE s.OrderStatus = 'Delivered'
+GROUP BY p.ProductName
+ORDER BY Average_Selling_Price DESC;
 
+## cancellation rate 
 SELECT
 ROUND(
 100 * SUM(OrderStatus='Cancelled') / COUNT(*),2
 ) AS Cancellation_Rate from sales_data;
+
+## orders per customer
+SELECT
+    c.CustomerName,
+    COUNT(s.OrderID) AS Total_Orders
+FROM sales_data s
+JOIN customers_information c
+ON s.CustomerID = c.CustomerID
+GROUP BY c.CustomerID, c.CustomerName
+ORDER BY Total_Orders DESC;
 
 SELECT
 ROUND(
@@ -131,6 +196,7 @@ ROUND(100*COUNT(*)/(SELECT COUNT(*) FROM sales_data),2) Percentage
 FROM sales_data
 GROUP BY OrderStatus;
 
+## average delivery time
 SELECT
 ROUND(AVG(DeliveryMinutes),2) Avg_Delivery_Time
 FROM sales_data
@@ -167,6 +233,7 @@ ROUND(COUNT(*)/COUNT(DISTINCT CustomerID),2) AS Avg_Orders_Per_Customer
 
 FROM sales_data;
 
+##repeat purchase rate
 SELECT
 ROUND(
 100.0 *
@@ -200,6 +267,7 @@ COUNT(*) Customers
 FROM customers_information
 GROUP BY CustomerSegment;
 
+#revenuebycusseg
 SELECT
 c.CustomerSegment,
 ROUND(SUM(s.NetAmount),2) Revenue,
@@ -211,12 +279,13 @@ WHERE s.OrderStatus='Delivered'
 GROUP BY c.CustomerSegment
 ORDER BY Revenue DESC;
 
-
+## avg del time
 SELECT
 ROUND(AVG(DeliveryMinutes),2) AS Avg_Delivery_Time
 FROM sales_data
 WHERE OrderStatus='Delivered';
 
+## del time dist
 SELECT
 CASE
 WHEN DeliveryMinutes <= 10 THEN '0-10 min'
@@ -230,6 +299,7 @@ WHERE OrderStatus='Delivered'
 GROUP BY Delivery_Bucket
 ORDER BY Delivery_Bucket;
 
+## del perfomance
 SELECT
 st.City,
 ROUND(AVG(s.DeliveryMinutes),2) AS Avg_Delivery_Time,
@@ -241,6 +311,7 @@ WHERE s.OrderStatus='Delivered'
 GROUP BY st.City
 ORDER BY Avg_Delivery_Time;
 
+##ordersby payment method 
 SELECT
 p.PaymentMethod,
 COUNT(*) AS Orders,
@@ -252,6 +323,49 @@ ON s.PaymentID=p.PaymentID
 GROUP BY p.PaymentMethod
 ORDER BY Orders DESC;
 
+##revenue by payment method
+SELECT
+    p.PaymentMethod,
+    ROUND(SUM(s.NetAmount), 2) AS Revenue
+FROM sales_data s
+JOIN payments_information p
+ON s.PaymentID = p.PaymentID
+WHERE s.OrderStatus = 'Delivered'
+GROUP BY p.PaymentMethod
+ORDER BY Revenue DESC;
+
+##prom wise rev
+SELECT
+    p.PromotionType,
+    ROUND(SUM(s.NetAmount), 2) AS Revenue
+FROM sales_data s
+JOIN promotions_information p
+ON s.PromotionID = p.PromotionID
+WHERE s.OrderStatus = 'Delivered'
+GROUP BY p.PromotionType
+ORDER BY Revenue DESC;
+
+##prom usage
+    SELECT
+    p.PromotionType,
+    COUNT(s.OrderID) AS Orders_Using_Promotion
+FROM sales_data s
+JOIN promotions_information p
+ON s.PromotionID = p.PromotionID
+GROUP BY p.PromotionType
+ORDER BY Orders_Using_Promotion DESC;
+
+#prom discount
+SELECT
+    p.PromotionType,
+    ROUND(SUM(s.DiscountAmount), 2) AS Total_Discount
+FROM sales_data s
+JOIN promotions_information p
+ON s.PromotionID = p.PromotionID
+GROUP BY p.PromotionType
+ORDER BY Total_Discount DESC;
+
+##prom performance
 SELECT
 pr.PromotionType,
 ROUND(AVG(s.DiscountAmount),2) AS Avg_Discount,
@@ -263,6 +377,7 @@ ON s.PromotionID=pr.PromotionID
 GROUP BY pr.PromotionType
 ORDER BY Avg_Discount DESC;
 
+#revenuebycity
 SELECT
 st.City,
 COUNT(*) AS Orders,
@@ -274,6 +389,8 @@ ON s.StoreID=st.StoreID
 GROUP BY st.City
 ORDER BY Revenue DESC;
 
+#month-over-month revenue growth
+    
 WITH monthly_revenue AS (
     SELECT
         DATE_FORMAT(OrderDateTime,'%Y-%m') AS Month,
@@ -299,6 +416,7 @@ SELECT
 
 FROM monthly_revenue;
 
+##customer rank by revenue generated
 SELECT
     c.CustomerName,
     SUM(s.NetAmount) AS Total_Revenue,
@@ -314,6 +432,8 @@ ON s.CustomerID = c.CustomerID
 
 GROUP BY c.CustomerID,c.CustomerName;
 
+
+##running revenue
 WITH daily_revenue AS (
 
 SELECT
